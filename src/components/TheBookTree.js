@@ -2,28 +2,40 @@ import React from "react"
 import {Tree} from "antd"
 
 class TheBookTree extends React.Component {
-    componentDidMount() {
-        const data = this.props.data
-        let treeData = {title: '书签管理', key: '0-0', level: 'level1', open: true, child: []}
-
-        function changeData(data, level = 0) {
-            data.map(item => {
-                if (item.children && item.children.length > 0) {
-                    changeData(item.children, level + 1);
-                } else {
-                    item.child = item.children;
-                    item.level = level;
-                }
-            });
-            return data;
+    constructor(props) {
+        super(props)
+        this.state = {
+            treeData: []
         }
+    }
 
-        console.log(changeData(data));
+    componentWillReceiveProps(nextProps) {
+        let treeData = []
+        function changeData(data, level = 0) {
+            for (let i = 0, icount = data.length; i < icount; i++) {
+                let item = data[i]
+                item.open = true
+                item.level = level
+                item.key = `item-id-${item.id}`
+                if (item.children && item.children.length > 0) {
+                    // item.child = item.children;
+                    changeData(item.children, level + 1)
+                } else {
+                    item.children = null
+                }
+            }
+        }
+        changeData(nextProps.data)
+        treeData = nextProps.data
+        console.log('treeData ===>', treeData)
+        this.setState({
+            treeData
+        })
     }
 
     render() {
         return (
-            <Tree showLine treeData={this.props.data}/>
+            <Tree showLine treeData={this.state.treeData}/>
         )
     }
 }

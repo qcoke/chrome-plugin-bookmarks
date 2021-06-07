@@ -17,7 +17,6 @@ class TheMainLayout extends React.Component {
             this.setState({
                 data: result.children
             });
-            // console.log('TheMainLayout:', this.state.data)
         });
     };
 
