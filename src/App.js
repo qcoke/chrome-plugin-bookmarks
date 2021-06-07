@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <TheMainLayout></TheMainLayout>
     </div>
-  );
+  )
 }
 
 export default App;
