@@ -9,10 +9,12 @@
     "default_popup": "index.html"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["jquery-2.1.1.min.js","background.js"]
   },
   "permissions": [
     "bookmarks",
-    "http://*/"
+    "webRequest",
+    "webRequestBlocking",
+    "*://*/*"
   ]
 }

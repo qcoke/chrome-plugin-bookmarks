@@ -6,7 +6,22 @@ class TheBookTree extends React.Component {
         super(props)
         this.state = {
             treeData: [],
-            tableFail: []
+            failureSource: [],
+            columns: [
+                {
+                    title: '名称',
+                    dataIndex: 'title',
+                    key: 'title'
+                }, {
+                    title: '地址',
+                    dataIndex: 'url',
+                    key: 'url'
+                }, {
+                    title: '添加时间',
+                    dataIndex: 'dateAdded',
+                    key: 'dateAdded'
+                }
+            ]
         }
     }
 
@@ -35,36 +50,22 @@ class TheBookTree extends React.Component {
     }
 
     checkData(data) {
-        let promiseArr = []
-
-        function loopData(data) {
-            for (let i = 0, icount = data.length; i < icount; i++) {
-                let item = data[i]
-                if (item.children && item.children.length > 0) {
-                    loopData(item.children)
-                } else {
-                    if (item.url) {
-                        const bg = chrome.extension.getBackgroundPage()
-                        promiseArr.push(bg.checkUrl(item.url))
-                    }
-                }
-            }
-        }
-
-        loopData(data)
-        console.log("promiseArr:", promiseArr)
-        Promise.all(promiseArr.map(p => p.catch(err => console.log('err:', err)))).then(value => {
-            console.log("value:", value)
-        }).catch(error => {
-            console.log("error:", error)
+        const _this_ = this;
+        const bg = chrome.extension.getBackgroundPage()
+        bg.check(data, function (FailureArr) {
+            _this_.setState({
+                failureSource: FailureArr
+            })
         })
     }
 
     render() {
         return (
             <Row>
-                <Col span={12}><Tree showLine treeData={this.state.treeData}/></Col>
-                <Col span={12}><Table dataSource={this.state.tableFail} bordered={true}/></Col>
+                <Col span={8}><Tree showLine treeData={this.state.treeData}/></Col>
+                <Col span={16}>
+                    <Table columns={this.state.columns} dataSource={this.state.failureSource} bordered={true}/>
+                </Col>
             </Row>
         )
     }

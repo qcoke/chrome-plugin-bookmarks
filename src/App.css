@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Limelight&display=swap');
 
 :root {
-  --main-width: 640px;
-  --main-height: 400px;
+  --main-width: 800px;
+  --main-height: 600px;
 }
 
 body,html {
