@@ -12,6 +12,7 @@ class TheBookTree extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let treeData = []
+
         function changeData(data, level = 0) {
             for (let i = 0, icount = data.length; i < icount; i++) {
                 let item = data[i]
@@ -33,23 +34,30 @@ class TheBookTree extends React.Component {
         })
     }
 
-    checkData(data){
-        function loopData(data){
+    checkData(data) {
+        let promiseArr = []
+
+        function loopData(data) {
             for (let i = 0, icount = data.length; i < icount; i++) {
                 let item = data[i]
                 if (item.children && item.children.length > 0) {
                     loopData(item.children)
                 } else {
-                    console.info('item:', item.url)
-                    if(item.url) {
-                        fetch(item.url).then(res => {
-                            console.log(res);
-                        })
+                    if (item.url) {
+                        const bg = chrome.extension.getBackgroundPage()
+                        promiseArr.push(bg.checkUrl(item.url))
                     }
                 }
             }
         }
+
         loopData(data)
+        console.log("promiseArr:", promiseArr)
+        Promise.all(promiseArr.map(p => p.catch(err => console.log('err:', err)))).then(value => {
+            console.log("value:", value)
+        }).catch(error => {
+            console.log("error:", error)
+        })
     }
 
     render() {

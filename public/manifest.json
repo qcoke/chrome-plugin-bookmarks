@@ -8,6 +8,9 @@
     "default_title": "书签管理器",
     "default_popup": "index.html"
   },
+  "background": {
+    "scripts": ["background.js"]
+  },
   "permissions": [
     "bookmarks",
     "http://*/"
